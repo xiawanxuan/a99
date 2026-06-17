@@ -1,9 +1,10 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Activity, Download, RefreshCw } from 'lucide-react';
+import { Activity, Download, RefreshCw, TrendingUp } from 'lucide-react';
 import type { DeformationMeasurement, AlertData, EllipseParams, DeviationStats } from '../../types';
 import { CrossSectionView } from '../three/CrossSectionView';
 import { DataCard, DataCardsGrid } from './DataCards';
 import { ColorLegend } from './ColorLegend';
+import TrendForecastPanel from './TrendForecastPanel';
 import { cn } from '../../lib/utils';
 
 interface AnalysisPanelProps {
@@ -212,6 +213,14 @@ export function AnalysisPanel({
             </div>
           </div>
         )}
+
+        <div className="border-t border-cyan-500/20 pt-4">
+          <h3 className="text-sm font-medium text-cyan-400 font-mono mb-3 flex items-center gap-2">
+            <TrendingUp size={14} />
+            形变趋势预测
+          </h3>
+          <TrendForecastPanel position={0.5} />
+        </div>
 
         <div className="border-t border-cyan-500/20 pt-4">
           <h3 className="text-sm font-medium text-cyan-400 font-mono mb-3">

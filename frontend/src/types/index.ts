@@ -194,3 +194,58 @@ export interface SceneState {
   cameraPosition: Point3D;
   cameraTarget: Point3D;
 }
+
+// ==================== 形变趋势预测 ====================
+
+export interface ForecastSummary {
+  history_periods: number;
+  forecast_horizon: number;
+  confidence_level: number;
+  settlement_avg: number;
+  settlement_max: number;
+  settlement_trend: number;
+  convergence_avg: number;
+  convergence_max: number;
+  convergence_trend: number;
+  final_settlement_forecast: number;
+  final_convergence_forecast: number;
+  settlement_delta: number;
+  convergence_delta: number;
+  settlement_risk_level: '低' | '中' | '高';
+  convergence_risk_level: '低' | '中' | '高';
+  overall_risk_level: '低' | '中' | '高';
+  alert_threshold: number;
+  will_exceed_threshold: boolean;
+}
+
+export interface TrendForecastData {
+  history_dates: string[];
+  history_settlement: number[];
+  history_convergence: number[];
+  forecast_dates: string[];
+  forecast_settlement: number[];
+  forecast_convergence: number[];
+  settlement_lower: number[];
+  settlement_upper: number[];
+  convergence_lower: number[];
+  convergence_upper: number[];
+  confidence_level: number;
+  summary: ForecastSummary;
+}
+
+export interface TrendForecastState {
+  data: TrendForecastData | null;
+  loading: boolean;
+  error: string | null;
+  forecastMonths: number;
+  confidenceLevel: number;
+  showForecast: boolean;
+  selectedMetric: 'both' | 'settlement' | 'convergence';
+}
+
+export type RiskLevelColor = {
+  bg: string;
+  text: string;
+  border: string;
+  badge: string;
+};

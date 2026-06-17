@@ -16,6 +16,7 @@ func SetupRoutes(r *gin.Engine, cfg *config.Config) {
 	analysisHandler := handlers.NewAnalysisHandler(cfg, alertDetector)
 	alertHandler := handlers.NewAlertHandler()
 	wsHandler := handlers.NewWebSocketHandler(alertHub)
+	forecastHandler := handlers.NewForecastHandler()
 
 	api := r.Group("/api")
 	{
@@ -50,6 +51,12 @@ func SetupRoutes(r *gin.Engine, cfg *config.Config) {
 		{
 			alerts.GET("", alertHandler.List)
 			alerts.PUT("/:id/acknowledge", alertHandler.Acknowledge)
+		}
+
+		forecast := api.Group("/forecast")
+		{
+			forecast.POST("", forecastHandler.PostForecast)
+			forecast.GET("/mock", forecastHandler.GetMockForecast)
 		}
 	}
 

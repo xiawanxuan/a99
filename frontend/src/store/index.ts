@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type {
+import {
   PointCloudData,
   CrossSectionData,
   DeformationResult,
@@ -11,6 +11,8 @@ import type {
   TimelineState,
   DeviationStats,
   PointCloudPhase,
+  TrendForecastData,
+  TrendForecastState,
 } from '../types';
 
 interface LoadingState {
@@ -31,6 +33,7 @@ interface AppState {
   errors: Record<string, string | null>;
   currentDeformationResult: DeformationResult | null;
   deviationStats: DeviationStats | null;
+  trendForecast: TrendForecastState;
 }
 
 interface AppActions {
@@ -44,6 +47,13 @@ interface AppActions {
   setDeformationResults: (drs: DeformationResult[]) => void;
   setCurrentDeformationResult: (result: DeformationResult | null) => void;
   setDeviationStats: (stats: DeviationStats | null) => void;
+  setTrendForecastData: (data: TrendForecastData | null) => void;
+  setTrendForecastLoading: (loading: boolean) => void;
+  setTrendForecastError: (error: string | null) => void;
+  setForecastMonths: (months: number) => void;
+  setConfidenceLevel: (level: number) => void;
+  setShowForecast: (show: boolean) => void;
+  setSelectedMetric: (metric: 'both' | 'settlement' | 'convergence') => void;
   addAlert: (alert: AlertData) => void;
   removeAlert: (alertId: string) => void;
   acknowledgeAlert: (id: string) => void;
@@ -137,6 +147,15 @@ export const useAppStore = create<AppState & AppActions>((set, get) => ({
   errors: {},
   currentDeformationResult: null,
   deviationStats: null,
+  trendForecast: {
+    data: null,
+    loading: false,
+    error: null,
+    forecastMonths: 3,
+    confidenceLevel: 0.95,
+    showForecast: true,
+    selectedMetric: 'both',
+  },
 
   addPointCloud: (pc) =>
     set((state) => ({
@@ -173,6 +192,41 @@ export const useAppStore = create<AppState & AppActions>((set, get) => ({
     set({ currentDeformationResult: result }),
 
   setDeviationStats: (stats) => set({ deviationStats: stats }),
+
+  setTrendForecastData: (data) =>
+    set((state) => ({
+      trendForecast: { ...state.trendForecast, data, loading: false, error: null },
+    })),
+
+  setTrendForecastLoading: (loading) =>
+    set((state) => ({
+      trendForecast: { ...state.trendForecast, loading },
+    })),
+
+  setTrendForecastError: (error) =>
+    set((state) => ({
+      trendForecast: { ...state.trendForecast, error, loading: false },
+    })),
+
+  setForecastMonths: (months) =>
+    set((state) => ({
+      trendForecast: { ...state.trendForecast, forecastMonths: months },
+    })),
+
+  setConfidenceLevel: (level) =>
+    set((state) => ({
+      trendForecast: { ...state.trendForecast, confidenceLevel: level },
+    })),
+
+  setShowForecast: (show) =>
+    set((state) => ({
+      trendForecast: { ...state.trendForecast, showForecast: show },
+    })),
+
+  setSelectedMetric: (metric) =>
+    set((state) => ({
+      trendForecast: { ...state.trendForecast, selectedMetric: metric },
+    })),
 
   addAlert: (alert) =>
     set((state) => ({
